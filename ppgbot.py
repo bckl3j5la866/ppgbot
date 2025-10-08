@@ -8,7 +8,7 @@ import os
 import io
 
 # Настройки
-TELEGRAM_BOT_TOKEN = '8113248677:AAHWgaG9E8T6RpJLG-B0fTu87SeezNb4zxU'  # ЗАМЕНИТЕ НА ВАШ ТОКЕН
+TELEGRAM_BOT_TOKEN = ''  # ЗАМЕНИТЕ НА ВАШ ТОКЕН
 BASE_URL = 'http://publication.pravo.gov.ru'
 
 # URL для разных типов документов
@@ -552,4 +552,5 @@ class DocumentBot:
 
 if __name__ == '__main__':
     bot = DocumentBot()
+
     bot.run()
