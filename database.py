@@ -1,10 +1,69 @@
-# Добавьте в database.py
+# database.py - полная версия с пользователями и документами
 import json
 import os
-from datetime import datetime
-from typing import List, Dict, Any
+import logging
+from typing import List, Dict, Any, Set
 
+logger = logging.getLogger(__name__)
+
+# Файлы базы данных
+USERS_FILE = 'data/users.json'
 DOCUMENTS_DB_FILE = 'data/documents.json'
+
+# ==============================
+# 📊 ФУНКЦИИ ДЛЯ РАБОТЫ С ПОЛЬЗОВАТЕЛЯМИ
+# ==============================
+
+def init_database():
+    """Инициализация базы данных"""
+    os.makedirs('data', exist_ok=True)
+
+def load_users() -> Set[str]:
+    """Загружает список пользователей из файла"""
+    init_database()
+    if not os.path.exists(USERS_FILE):
+        return set()
+    try:
+        with open(USERS_FILE, 'r', encoding='utf-8') as f:
+            return set(json.load(f))
+    except Exception as e:
+        logger.error(f"Ошибка загрузки users: {e}")
+        return set()
+
+def save_users(users: Set[str]):
+    """Сохраняет список пользователей в файл"""
+    init_database()
+    try:
+        with open(USERS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(list(users), f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        logger.error(f"Ошибка сохранения users: {e}")
+
+def add_user(user_id: int):
+    """Добавляет пользователя в список подписчиков"""
+    users = load_users()
+    user_str = str(user_id)
+    if user_str not in users:
+        users.add(user_str)
+        save_users(users)
+        logger.info(f"✅ Добавлен пользователь: {user_id}")
+
+def remove_user(user_id: int):
+    """Удаляет пользователя из списка подписчиков"""
+    users = load_users()
+    user_str = str(user_id)
+    if user_str in users:
+        users.discard(user_str)
+        save_users(users)
+        logger.info(f"❌ Удален пользователь: {user_id}")
+
+def get_user_count() -> int:
+    """Возвращает количество пользователей"""
+    return len(load_users())
+
+# ==============================
+# 📄 ФУНКЦИИ ДЛЯ РАБОТЫ С ДОКУМЕНТАМИ
+# ==============================
 
 def init_documents_db():
     """Инициализация базы документов"""
