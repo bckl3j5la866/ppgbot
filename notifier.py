@@ -11,7 +11,7 @@ from performance_optimizations import (
     async_get_document_count, async_get_last_update_date,
     shutdown_executor, run_in_thread
 )
-from storage.storage import mark_as_notified, filter_by_boundary, update_boundary
+from storage import mark_as_notified, filter_by_boundary, update_boundary
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
