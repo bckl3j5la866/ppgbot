@@ -11,40 +11,17 @@ if not BOT_TOKEN:
     raise ValueError("❌ BOT_TOKEN не найден. Убедитесь, что токен установлен в настройках bothost.ru")
 
 # Папка для хранения данных
-DATA_DIR = os.getenv("DATA_DIR", "./data")
+DATA_DIR = "./data"
 
 # Файлы для хранения данных
-DOCUMENTS_DB_FILE = os.path.join(DATA_DIR, "documents_database.json")  # Основная база
-SIMPLE_DB_FILE = os.path.join(DATA_DIR, "documents.json")              # Старая структура (для совместимости)
-
-# Для обратной совместимости - используем основную базу
-DATABASE_FILE = DOCUMENTS_DB_FILE
+DOCUMENTS_DB_FILE = os.path.join(DATA_DIR, "documents_database.json")
 USERS_FILE = os.path.join(DATA_DIR, "users.json")
-NOTIFIED_FILE = os.path.join(DATA_DIR, "notified.json")
 
 # Интервал проверки обновлений (в секундах)
-CHECK_INTERVAL_SECONDS = int(os.getenv("CHECK_INTERVAL_SECONDS", "3600"))  # 1 час
+CHECK_INTERVAL_SECONDS = 3600  # 1 час
 
 # Количество документов, которые бот загружает за один раз
 DOCUMENT_LIMIT = 500
-
-# ===================================
-# 📚 URL источников публикаций актов
-# ===================================
-
-# Минпросвещения Российской Федерации
-FEDERAL_URL = "https://publication.pravo.gov.ru/documents/block/foiv262"
-
-# Минобрнауки Республики Саха (Якутия)
-REGIONAL_URL = (
-    "https://publication.pravo.gov.ru/search/region14/iogv"
-    "?pageSize=30&index=1&SignatoryAuthorityId=39ec279e-970f-43c0-85b7-4aba57163bb7"
-    "&PublishDateSearchType=0&NumberSearchType=0&DocumentDateSearchType=0"
-    "&JdRegSearchType=0&SortedBy=6&SortDestination=1"
-)
-
-# Рособрнадзор
-OBRNADZOR_URL = "http://publication.pravo.gov.ru/documents/block/foiv320"
 
 # ===================================
 # 🌐 Заголовки HTTP-запросов
