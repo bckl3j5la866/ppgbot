@@ -1,10 +1,12 @@
-# main.py - работающая версия без парсера
+# main.py - с базой данных пользователей
 import asyncio
 import logging
 import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.client.default import DefaultBotProperties
+
+from database import add_user, remove_user, get_user_count
 
 # Настройка логирования
 logging.basicConfig(
@@ -28,31 +30,64 @@ async def main():
 
         @dp.message(Command("start"))
         async def start_command(message: types.Message):
+            user_id = message.from_user.id
+            add_user(user_id)
+            user_count = get_user_count()
+            
             await message.answer(
-                "👋 <b>Бот успешно запущен!</b>\n\n"
-                "✅ Система работает корректно\n"
-                "📚 Функционал парсера будет добавлен позже\n"
-                "🤖 Бот готов к базовым командам"
+                "👋 <b>Добро пожаловать в бот правовых актов!</b>\n\n"
+                "✅ Вы подписаны на обновления\n"
+                f"📊 Всего пользователей: {user_count}\n\n"
+                "⚡ <b>Доступные команды:</b>\n"
+                "/help - справка\n"
+                "/stats - статистика\n"
+                "/unsubscribe - отписаться"
             )
 
         @dp.message(Command("help"))
         async def help_command(message: types.Message):
             await message.answer(
-                "ℹ️ <b>Доступные команды:</b>\n"
-                "/start - запуск бота\n"
-                "/help - справка\n"
-                "/test - тест работы"
+                "ℹ️ <b>Справка по боту:</b>\n\n"
+                "📋 <b>Основные команды:</b>\n"
+                "/start - подписаться и начать работу\n"
+                "/stats - статистика бота\n"
+                "/unsubscribe - отписаться от обновлений\n\n"
+                "🔔 <b>В разработке:</b>\n"
+                "• Автоматические уведомления о новых документах\n"
+                "• Поиск по правовым актам\n"
+                "• Отслеживание изменений законодательства"
             )
 
-        @dp.message(Command("test"))
-        async def test_command(message: types.Message):
-            await message.answer("✅ Тестовое сообщение - бот работает!")
+        @dp.message(Command("stats"))
+        async def stats_command(message: types.Message):
+            user_count = get_user_count()
+            await message.answer(
+                "📊 <b>Статистика бота:</b>\n\n"
+                f"• Пользователей: {user_count}\n"
+                f"• Статус: 🟢 Активен\n"
+                f"• Платформа: bothost.ru\n\n"
+                "⚡ Бот работает стабильно"
+            )
+
+        @dp.message(Command("unsubscribe"))
+        async def unsubscribe_command(message: types.Message):
+            user_id = message.from_user.id
+            remove_user(user_id)
+            await message.answer(
+                "🔔 Вы отписаны от обновлений.\n"
+                "Чтобы снова подписаться, отправьте /start"
+            )
 
         @dp.message()
         async def echo(message: types.Message):
-            await message.answer("ℹ️ Используйте /start или /help")
+            await message.answer(
+                "ℹ️ Используйте команды:\n"
+                "/start - начать работу\n"
+                "/help - справка\n"
+                "/stats - статистика"
+            )
 
-        logger.info("🚀 Бот запускается...")
+        logger.info("🚀 Бот запускается с обновленной функциональностью...")
         await dp.start_polling(bot)
 
     except Exception as e:
