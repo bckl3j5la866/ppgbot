@@ -1,11 +1,8 @@
-# main.py - временная версия для теста
+# main.py - минимальная версия для bothost.ru
 import asyncio
 import logging
 import sys
 import os
-
-# Добавьте путь к корневой папке в PYTHONPATH
-sys.path.append(os.path.dirname(__file__))
 
 # Настройка логирования
 logging.basicConfig(
@@ -15,12 +12,21 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 async def main():
-    """Упрощенная версия для тестирования"""
+    """Основная функция запуска бота для bothost.ru"""
     try:
-        # Импорты внутри функции чтобы избежать циклических импортов
+        # Проверяем конфигурацию
+        from config import BOT_TOKEN
+        
+        if not BOT_TOKEN:
+            logger.error("❌ BOT_TOKEN не установлен. Проверьте настройки на bothost.ru")
+            return
+        
+        logger.info("✅ Конфигурация загружена успешно")
+        
+        # Импортируем бота после проверки конфигурации
         from bot.bot_core import bot, dp
         
-        logger.info("🚀 Запуск Telegram-бота...")
+        logger.info("🚀 Запуск бота на bothost.ru...")
         await dp.start_polling(bot)
         
     except Exception as e:
